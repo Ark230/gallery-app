@@ -1,7 +1,39 @@
 ---
+import GalleryCard from "../components/GalleryCard.astro";
 
+import StarryNight from "../assets/starry-night/thumbnail.jpg";
+import GirlWithPearlEarring from "../assets/girl-with-pearl-earring/thumbnail.jpg";
+import Guernica from "../assets/guernica/thumbnail.jpg";
 ---
 
 <main>
-  <h2>Main content</h2>
+  <div class="content-container">
+    <GalleryCard
+      source={StarryNight.src}
+      name="Starry Night"
+      author="Vicent Van Gogh"
+    />
+    <GalleryCard
+      source={GirlWithPearlEarring.src}
+      name="Girl with a Pearl Earring"
+      author="Johannes Vermeer"
+    />
+    <GalleryCard source={Guernica.src} name="Guernica" author="Pablo Picasso" />
+    <GalleryCard
+      source={StarryNight.src}
+      name="Starry Night"
+      author="Vicent Van Gogh"
+    />
+  </div>
 </main>
+
+<style>
+  .content-container {
+    display: grid;
+
+    grid-template-columns: repeat(auto-fit, minmax(19rem, 1fr));
+    grid-auto-rows: 250px 400px 285px;
+    padding: 1.25em;
+    gap: 1rem;
+  }
+</style>

@@ -1,0 +1,43 @@
+---
+const { source, name, author } = Astro.props;
+---
+
+<div class="gallery-card">
+  <!-- <img src="../assets/starry-night/thumbnail.jpg" /> -->
+  <img class="gallery-card__image" src={source} />
+  <div class="gallery-card__paint-information">
+    <strong class="gallery-card__paint-name">{name}</strong>
+    <p class="gallery-card__paint-author">{author}</p>
+  </div>
+</div>
+
+<style>
+  .gallery-card {
+    position: relative;
+
+    &__paint-information {
+      position: absolute;
+      /* top: 72%; */
+      bottom: 0;
+      left: 7%;
+      max-width: 20ch;
+
+      & > .gallery-card__paint-name {
+        color: var(--color-white);
+        font-size: 1.5rem;
+        font-weight: bold;
+        max-width: 20ch;
+      }
+
+      & > .gallery-card__paint-author {
+        color: var(--color-gray-platinum);
+        font-size: 0.8rem;
+      }
+    }
+
+    &__image {
+      width: 100%;
+      height: 100%;
+    }
+  }
+</style>
