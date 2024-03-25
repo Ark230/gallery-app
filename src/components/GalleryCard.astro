@@ -1,10 +1,16 @@
 ---
-const { source, name, author } = Astro.props;
+const { sources, name, author } = Astro.props;
+const { artist, gallery, heroLarge, heroSmall, thumbnail } = sources;
 ---
 
 <div class="gallery-card">
-  <!-- <img src="../assets/starry-night/thumbnail.jpg" /> -->
-  <img class="gallery-card__image" src={source} />
+  <a href="/painting-detail/starry-night">
+    <img
+      class="gallery-card__image"
+      srcset={`${thumbnail} 400w, ${heroLarge} 1200w`}
+      sizes="(max-width: 375px) 90vw, 33vw"
+    />
+  </a>
   <div class="gallery-card__paint-information">
     <strong class="gallery-card__paint-name">{name}</strong>
     <p class="gallery-card__paint-author">{author}</p>
@@ -17,7 +23,6 @@ const { source, name, author } = Astro.props;
 
     &__paint-information {
       position: absolute;
-      /* top: 72%; */
       bottom: 0;
       left: 7%;
       max-width: 20ch;

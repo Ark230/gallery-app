@@ -1,0 +1,117 @@
+---
+import Layout from "@layouts/Layout.astro";
+import { imagesSources } from "src/constants";
+import type { ImageSource, ImageSourceDimensions } from "src/constants";
+
+export async function getStaticPaths() {
+  return [
+    { params: { detail: "starry-night" } },
+    { params: { detail: "test2" } },
+    { params: { detail: "test3" } },
+  ];
+}
+
+const { detail } = Astro.params;
+
+const getImages = (imgSources: ImageSource[]) => {
+  let imgSourcesBack: ImageSource[] = [];
+  imgSourcesBack = imgSourcesBack.concat(imgSources);
+
+  const paintName = detail.split("-");
+
+  const test = paintName
+    .map((word) => word[0].toUpperCase() + word.slice(1))
+    .join(" ");
+
+  return imgSourcesBack.find((el) => el.name === test)!.dimensions;
+};
+
+const myImages: ImageSourceDimensions = getImages(imagesSources);
+---
+
+<Layout title="Starry Night">
+  <div class="content-container">
+    <div>
+      <img class="paint-img" src={myImages.thumbnail} />
+      <div class="below-data">
+        <strong>Starry Night</strong>
+        <span>Vicent Van Gogh</span>
+      </div>
+    </div>
+
+    <div>
+      <img class="artist-img" src={myImages.artist} />
+    </div>
+
+    <div class="display-container">
+      <span class="age-display">1889</span>
+    </div>
+
+    <div>
+      <p class="paint-body">
+        Although The Starry Night was painted during the day in Van Gogh's
+        ground-floor studio, it would be inaccurate to state that the picture
+        was painted from memory. The view has been identified as the one from
+        his bedroom window, facing east, a view which Van Gogh painted
+        variations of no fewer than twenty-one times, including The Starry
+        Night. "Through the iron-barred window," he wrote to his brother, Theo,
+        around 23 May 1889, "I can see an enclosed square of wheat ... above
+        which, in the morning, I watch the sun rise in all its glory."
+      </p>
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .content-container {
+    padding: 1rem;
+
+    .artist-img {
+      width: 4rem;
+    }
+
+    .paint-img {
+      width: 100%;
+      clip-path: polygon(
+        0 80%,
+        30% 80%,
+        84% 80%,
+        84% 100%,
+        100% 100%,
+        100% 0,
+        0% 0%
+      );
+    }
+
+    .display-container {
+      position: relative;
+      margin-bottom: 5.5rem;
+      .age-display {
+        position: absolute;
+        font-size: 6.25rem;
+        color: var(--color-gray-cultured);
+        right: 0;
+      }
+    }
+
+    .below-data {
+      transform: translate(1.5rem, -1.5rem);
+      strong {
+        display: block;
+        font-size: var(--f-heading-2);
+        line-height: var(--lh-heading-2);
+        width: 100%;
+      }
+      span {
+        font-size: var(--f-subhead-1);
+        line-height: var(--lh-subhead-1);
+        color: var(--color-gray);
+      }
+    }
+
+    .paint-body {
+      font-size: var(--f-body);
+      line-height: var(--lh-body);
+    }
+  }
+</style>

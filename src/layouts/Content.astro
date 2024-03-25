@@ -1,29 +1,19 @@
 ---
 import GalleryCard from "../components/GalleryCard.astro";
-
-import StarryNight from "../assets/starry-night/thumbnail.jpg";
-import GirlWithPearlEarring from "../assets/girl-with-pearl-earring/thumbnail.jpg";
-import Guernica from "../assets/guernica/thumbnail.jpg";
+import { imagesSources } from "../constants";
 ---
 
 <main>
   <div class="content-container">
-    <GalleryCard
-      source={StarryNight.src}
-      name="Starry Night"
-      author="Vicent Van Gogh"
-    />
-    <GalleryCard
-      source={GirlWithPearlEarring.src}
-      name="Girl with a Pearl Earring"
-      author="Johannes Vermeer"
-    />
-    <GalleryCard source={Guernica.src} name="Guernica" author="Pablo Picasso" />
-    <GalleryCard
-      source={StarryNight.src}
-      name="Starry Night"
-      author="Vicent Van Gogh"
-    />
+    {
+      imagesSources.map((image) => (
+        <GalleryCard
+          sources={image.dimensions}
+          name={image.name}
+          author={image.author}
+        />
+      ))
+    }
   </div>
 </main>
 
