@@ -2,12 +2,13 @@
 import Layout from "@layouts/Layout.astro";
 import { imagesSources } from "src/constants";
 import type { ImageSource, ImageSourceDimensions } from "src/constants";
+import OpenImage from "../../assets/icons/open-image.svg";
 
 export async function getStaticPaths() {
   return [
     { params: { detail: "starry-night" } },
-    { params: { detail: "test2" } },
-    { params: { detail: "test3" } },
+    { params: { detail: "girl-with-a-pearl-earring" } },
+    { params: { detail: "guernica" } },
   ];
 }
 
@@ -23,16 +24,60 @@ const getImages = (imgSources: ImageSource[]) => {
     .map((word) => word[0].toUpperCase() + word.slice(1))
     .join(" ");
 
-  return imgSourcesBack.find((el) => el.name === test)!.dimensions;
+  return imgSourcesBack.find((el) => el.name === test) as ImageSource;
 };
 
-const myImages: ImageSourceDimensions = getImages(imagesSources);
+const myImages = getImages(imagesSources);
+console.log(myImages, "print console");
 ---
 
 <Layout title="Starry Night">
+  <script>
+    var modal = document.getElementById("myModal") as HTMLElement;
+    var btn = document.getElementById("openModal") as HTMLElement;
+    var span = document.getElementsByClassName("close")[0] as HTMLElement;
+
+    btn.onclick = function () {
+      modal.style.display = "block";
+      modal.style.animationName = "fadeIn";
+      modal.style.animationDuration = "0.7s";
+    };
+
+    span.onclick = function () {
+      modal.style.display = "none";
+    };
+
+    // Función para cerrar el modal con animación
+    function closeModal() {
+      modal.style.animationName = "fadeOut"; // Aplica la animación fadeOut al cerrar
+      modal.style.animationDuration = "0.7s";
+      // Espera a que termine la animación para ocultar el modal
+      setTimeout(function () {
+        modal.style.display = "none";
+      }, 400); // Ajusta este tiempo al mismo que la duración de tu animación
+    }
+
+    window.onclick = function (event) {
+      if (event.target == modal) {
+        closeModal();
+      }
+    };
+  </script>
+  <div id="myModal" class="modal">
+    <div class="modal-content">
+      <span class="close">CLOSE</span>
+      <img src={myImages.dimensions.thumbnail} />
+    </div>
+  </div>
+
   <div class="content-container">
-    <div>
-      <img class="paint-img" src={myImages.thumbnail} />
+    <div class="paint-container">
+      <div class="view-image">
+        <img class="open-image" src={OpenImage.src} /><span id="openModal"
+          >VIEW IMAGE</span
+        >
+      </div>
+      <img class="paint-img" src={myImages.dimensions.thumbnail} />
       <div class="below-data">
         <strong>Starry Night</strong>
         <span>Vicent Van Gogh</span>
@@ -40,34 +85,112 @@ const myImages: ImageSourceDimensions = getImages(imagesSources);
     </div>
 
     <div>
-      <img class="artist-img" src={myImages.artist} />
+      <img class="artist-img" src={myImages.dimensions.artist} />
     </div>
 
     <div class="display-container">
-      <span class="age-display">1889</span>
+      <span class="age-display">{myImages.year}</span>
     </div>
 
     <div>
       <p class="paint-body">
-        Although The Starry Night was painted during the day in Van Gogh's
-        ground-floor studio, it would be inaccurate to state that the picture
-        was painted from memory. The view has been identified as the one from
-        his bedroom window, facing east, a view which Van Gogh painted
-        variations of no fewer than twenty-one times, including The Starry
-        Night. "Through the iron-barred window," he wrote to his brother, Theo,
-        around 23 May 1889, "I can see an enclosed square of wheat ... above
-        which, in the morning, I watch the sun rise in all its glory."
+        {myImages.paintDescription}
       </p>
+    </div>
+
+    <div>
+      <a class="go-to-source" href="/"> GO TO SOURCE </a>
     </div>
   </div>
 </Layout>
 
 <style>
+  .modal {
+    display: none; /* Oculto por defecto */
+    position: fixed; /* Se queda fijo en la pantalla */
+    z-index: 2; /* Se sitúa sobre el resto */
+    left: 0;
+    top: 0;
+    width: 100%; /* Ancho completo */
+    height: 100%; /* Alto completo */
+    overflow: auto; /* Si el contenido es muy grande, permite scroll */
+    background-color: rgba(0, 0, 0, 0.8); /* Fondo semitransparente */
+  }
+
+  .modal-content {
+    background-color: transparent;
+    margin: 15% auto; /* 15% desde el top y centrado */
+    padding: 20px;
+    /* border: 1px solid #888; */
+    width: 80%; /* Ancho del contenido */
+    animation-name: fadeIn; /* Animación para el fade-in */
+    animation-duration: 0.4s; /* Duración de la animación */
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  /* Agrega esta nueva animación a tu CSS */
+  /* Modifica los keyframes de fadeOut en tu CSS */
+  @keyframes fadeOut {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+
+  .close {
+    color: var(--color-white);
+    float: right;
+    font-size: 1rem;
+    font-weight: bold;
+    margin-bottom: 2em;
+    font-size: var(--f-link-1);
+    letter-spacing: var(--lt-spacing-link-1);
+  }
+
+  .close:hover,
+  .close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .open-image {
+    display: inline-block;
+    margin-right: 1em;
+  }
   .content-container {
-    padding: 1rem;
+    padding: 1.5rem;
+
+    .paint-container {
+      position: relative;
+    }
+    .view-image {
+      z-index: 1;
+      position: absolute;
+      color: white;
+      left: 1.5rem;
+      top: 1.5rem;
+      background-color: rgba(0, 0, 0, 0.7);
+      padding: 1em;
+
+      span {
+        font-size: var(--f-link-1);
+        letter-spacing: var(--lt-spacing-link-1);
+      }
+    }
 
     .artist-img {
       width: 4rem;
+      margin-left: 1.25rem;
     }
 
     .paint-img {
@@ -85,19 +208,23 @@ const myImages: ImageSourceDimensions = getImages(imagesSources);
 
     .display-container {
       position: relative;
-      margin-bottom: 5.5rem;
+      margin-bottom: 3.5rem;
       .age-display {
         position: absolute;
         font-size: 6.25rem;
+        font-weight: bold;
         color: var(--color-gray-cultured);
-        right: 0;
+        right: 0.35rem;
+        top: -1.8rem;
       }
     }
 
     .below-data {
+      width: fit-content;
       transform: translate(1.5rem, -1.5rem);
       strong {
         display: block;
+        margin-bottom: 0.5rem;
         font-size: var(--f-heading-2);
         line-height: var(--lh-heading-2);
         width: 100%;
@@ -110,8 +237,18 @@ const myImages: ImageSourceDimensions = getImages(imagesSources);
     }
 
     .paint-body {
+      position: relative;
+      z-index: 1;
       font-size: var(--f-body);
       line-height: var(--lh-body);
+      color: var(--color-gray);
     }
+  }
+
+  .go-to-source {
+    font-size: var(--f-link-2);
+    letter-spacing: var(--lt-spacing-link-2);
+    text-decoration: underline;
+    color: var(--color-gray);
   }
 </style>
